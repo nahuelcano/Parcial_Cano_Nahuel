@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(31, 111, 138);
+}
+
+h1 {
+    color: white;
+    text-align: center;
+}
+
+p {
+    font-family: verdana;
+    font-size: 20px;
+}

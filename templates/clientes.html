@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Cliente{% endblock %}
+
+{% block page_content %}
+<h1>Bienvenido a Clientes</h1>
+{% if not session.logged_in %}
+<div> 
+    <div class="container-fluid">
+        <table class="table table-bordered table-condensed" >
+            <tbody>
+                {% for linea in misventas %}
+                    <tr class="active">                
+                        {% for item in  linea %}
+                        <td >{{item}}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<h1>Manco</h1>>
+{% endif %}
+{% endblock %}
