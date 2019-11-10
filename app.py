@@ -11,9 +11,9 @@ app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
 app.config['SECRET_KEY'] = 'un string que funcione como llave'
-
+#bloque de difincion de abrir el archivo csv que lo lee lo guarde en una lista y lo retone
 def listaCSV():
-    with open('clientes.csv','r', encoding="utf-8") as cliente:
+    with open('clientes.csv','r', encoding="utf-8") as cliente: 
         leearh = csv.reader(cliente)
         archlist = list(leearh)
     return archlist
@@ -42,6 +42,9 @@ def saludar_persona(usuario):
 def no_encontrado(e):
     return render_template('404.html'), 404
 
+@app.route('/about',methods=['GET', 'POST'])
+def about():
+    return render_template('about.html')
 
 @app.errorhandler(500)
 def error_interno(e):
@@ -60,11 +63,11 @@ def ingresar():
                     session['username'] = formulario.usuario.data
                     return render_template('ingresado.html', username=session['username'])
                 registro = next(archivo_csv, None)
-            else:
+            else: #se agrego un else de qe si no esta conectado lo redireccione a ingresar
                 flash('Revisá nombre de usuario y contraseña')
                 return redirect(url_for('ingresar'))
     return render_template('login.html', formulario=formulario)
-#Bloque de Clientes
+#Bloque de Clientes cree una ruta para el nuevo html que se muestra si estas logiado si no te redirecciona a sin permiso
 @app.route('/clientes', methods=['GET', 'POST'])
 def clientes():
     if 'username' in session:
@@ -74,19 +77,33 @@ def clientes():
     else:
         return render_template('sin_permiso.html')
 
+
 @app.route('/registrar', methods=['GET', 'POST'])
 def registrar():
     formulario = RegistrarForm()
     if formulario.validate_on_submit():
-        if formulario.password.data == formulario.password_check.data:
-            with open('usuarios', 'a+', newline='') as archivo:
-                archivo_csv = csv.writer(archivo)
-                registro = [formulario.usuario.data, formulario.password.data]
-                archivo_csv.writerow(registro)
-            flash('Usuario creado correctamente')
-            return redirect(url_for('ingresar'))
-        else:
-            flash('Las passwords no matchean')
+        #Comienzo a tocar
+        Existe= False
+        with open('usuarios') as archivo:
+            archivo_csv2 = csv.reader(archivo)
+            registro2 = next(archivo_csv2)
+            while registro2 and Existe==False:
+                if formulario.usuario.data == registro2[0]:
+                    flash('El usuario ya esta en uso.')
+                    Existe=True
+                registro2 = next(archivo_csv2, None)
+        #Termine de tocar
+        if Existe ==False:
+            if formulario.password.data == formulario.password_check.data:
+
+                with open('usuarios', 'a+', newline='') as archivo:
+                    archivo_csv = csv.writer(archivo)
+                    registro = [formulario.usuario.data, formulario.password.data]
+                    archivo_csv.writerow(registro)
+                flash('Usuario creado correctamente')
+                return redirect(url_for('ingresar'))
+            else:
+                flash('Las passwords no matchean')
     return render_template('registrar.html', form=formulario)
 
 

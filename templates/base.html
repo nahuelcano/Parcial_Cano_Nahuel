@@ -18,20 +18,23 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Log</a>
+            <a class="navbar-brand" href="/">Inicio</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">Inicio</a></li>
                 <li><a href="/saludar">Saludar</a></li>
                 {% if 'username' in session %}
                 <li><a href="/clientes">Clientes</a></li>
-                <li><a href="/logout">Salir</a></li>
-                
+                {% endif %}
+            </ul>    
+            <ul class="nav navbar-nav navbar-right">   
+                {% if 'username' in session %}
+                <li><a href="/logout">Salir</a></li>              
                 {% else %}
                 <li><a href="/ingresar">Ingresar</a></li>
                 <li><a href="/registrar">Registrarse</a></li>
                 {% endif %}
+                <li><a href="/about">About</a></li>
             </ul>
         </div>
     </div>
